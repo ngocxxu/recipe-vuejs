@@ -1,15 +1,40 @@
 <template>
   <div class="recipe">
     <router-link to="/">&lt; Back</router-link>
-    <h1>{{ $route.params.slug }}</h1>
+    <h1>{{ recipe.title }}</h1>
+    <p class="desc">
+      {{ recipe.description }}
+    </p>
+    <hr />
+    <div class="ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        <li v-for='(ingredient, index) in recipe.ingredients' :key='index'>{{ ingredient }}</li>
+      </ul>
+    </div>
+
+    <div class="method">
+      <h3>Method</h3>
+      <ol>
+        <li v-for="(step, i) in recipe.method" :key='i'>
+          <span v-html="cleanText(step)"></span>
+        </li>
+      </ol>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   computed: {
+    // No need return and use directly in <template></template>
     recipe() {
       return this.$store.state.recipes.find(rep => rep.slug === this.$route.params.slug)
+    },
+  },
+  methods: {
+    cleanText(text) {
+      return text.replace(/\n/g, '<br/>')
     }
   }
 }
